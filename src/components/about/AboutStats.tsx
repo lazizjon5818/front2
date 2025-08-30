@@ -1,5 +1,5 @@
 // src/components/about/AboutStats.tsx
-import { Box, Container, Stack, Typography, useTheme } from "@mui/material";
+import { Box, Container, Stack, Typography} from "@mui/material";
 import SectionCard from "../common/SectionCard";
 
 const stats = [
@@ -9,7 +9,7 @@ const stats = [
 ];
 
 const AboutStats = () => {
-  const theme = useTheme();
+  // const theme = useTheme();
   return (
     <Box component="section" sx={{ py: { xs: 4, md: 1 }, px: { xs: 2, md: 0 } }}>
       <Container maxWidth="lg">
