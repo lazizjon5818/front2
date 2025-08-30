@@ -4,40 +4,34 @@ import { Container, Box, Stack } from "@mui/material";
 import TestHero from "../components/tests/TestHero";
 import TestTabs from "../components/tests/TestTabs";
 import TestList from "../components/tests/TestList";
-
+import TestFilter from "../components/tests/TestFilter";
 const Tests = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeModule, setActiveModule] = useState<
-    "Barchasi" | "Listening" | "Reading" | "Writing" | "Speaking"
-  >("Barchasi");
+  const [activeModule, setActiveModule] =
+    useState<"Barchasi" | "Listening" | "Reading" | "Writing" | "Speaking">("Barchasi");
 
-  const handleSearch = (q: string) => setSearchQuery(q);
-  const handleModuleChange = (tab: string) => setActiveModule(tab as any);
-  const handleStart = (id: string) => {
-    // TODO: navigate(`/tests/${id}`) yoki modal ochish
-    console.log("Start test:", id);
-  };
+  const [filters, setFilters] = useState<{ level?: string; duration?: string }>({}); // qoladi
 
   return (
     <Container maxWidth="lg" sx={{ py: { xs: 4, md: 6 } }}>
-      <Box
-        sx={(theme) => ({
-          borderRadius: 4,
-          p: { xs: 2, md: 4 },
-          border: `1px solid ${theme.palette.divider}`,
-          background:
-            theme.palette.mode === "dark"
-              ? "linear-gradient(180deg, #0f1115 0%, #10131a 100%)"
-              : "linear-gradient(180deg, #ffffff 0%, #f9fafb 100%)",
-        })}
-      >
+      <Box sx={{ /* sizdagi style */ }}>
         <Stack spacing={{ xs: 4, md: 6 }}>
-          <TestHero onSearch={handleSearch} />
-          <TestTabs onChange={handleModuleChange} />
+          <TestHero onSearch={setSearchQuery} />
+          {/* Tabs + Filter bir qatorda */}
+          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 2, flexWrap: "wrap" }}>
+            <Box sx={{ minWidth: 260, flex: 1, overflowX: "auto" }}>
+              <TestTabs onChange={(tab) => setActiveModule(tab as any)} />
+            </Box>
+            <Box sx={{ flexShrink: 0 }}>
+              <TestFilter onFilter={setFilters} />
+            </Box>
+          </Box>
+
           <TestList
             module={activeModule}
             searchQuery={searchQuery}
-            onStartTest={handleStart}
+            filters={filters}              // ✅ endi TestList buni qabul qiladi
+            onStartTest={(id) => console.log("Start test:", id)}
           />
         </Stack>
       </Box>
