@@ -1,7 +1,6 @@
-// src/components/tests/TestList.tsx
 import { Box, Stack, Typography } from "@mui/material";
 import { useMemo } from "react";
-import TestItemCard, { TestItem } from "./TestItemCard"; // siz avval yaratgan kartangiz
+import TestItemCard, { TestItem } from "./TestItemCard";
 import HeadphonesIcon from "@mui/icons-material/Headphones";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import EditIcon from "@mui/icons-material/Edit";
@@ -16,16 +15,12 @@ type Props = {
 };
 
 type TestItemExtended = TestItem & {
-  // Reading uchun:
   passage?: "Passage 1" | "Passage 2" | "Passage 3";
-  // Listening uchun:
   part?: "Part 1" | "Part 2" | "Part 3" | "Part 4";
-  // Umumiy:
   qtype?: string;
 };
 
 const allTests: TestItemExtended[] = [
-  // Reading namunalar
   {
     id: "rd-1",
     title: "Reading — Matching Headings",
@@ -62,8 +57,6 @@ const allTests: TestItemExtended[] = [
     passage: "Passage 3",
     qtype: "Gap Filling",
   },
-
-  // Listening namunalar
   {
     id: "ls-1",
     title: "Listening — Map",
@@ -88,8 +81,6 @@ const allTests: TestItemExtended[] = [
     part: "Part 3",
     qtype: "Multiple Choice (Many Answers)",
   },
-
-  // Boshqa modullar (ko‘rsatish uchun)
   {
     id: "wr-1",
     title: "Writing Task 1 — Charts",
@@ -119,16 +110,11 @@ const TestList = ({ module, searchQuery, qFilter, onStartTest }: Props) => {
 
   const filtered = useMemo(() => {
     return allTests.filter((t) => {
-      // Modul bo‘yicha
       const matchesModule = module === "Barchasi" ? true : t.module === module;
-
-      // Matn bo‘yicha qidiruv
       const matchesQuery = q
         ? [t.title, t.desc, t.module, t.level ?? "", t.qtype ?? "", t.passage ?? "", t.part ?? ""]
             .some((v) => normalize(String(v)).includes(q))
         : true;
-
-      // Reading / Listening uchun maxsus
       let matchesRorL = true;
       if (module === "Reading") {
         const passOk =
@@ -147,25 +133,61 @@ const TestList = ({ module, searchQuery, qFilter, onStartTest }: Props) => {
           (qFilter?.qtypes?.includes(t.qtype ?? "") ?? false);
         matchesRorL = partOk && typeOk;
       }
-
       return matchesModule && matchesQuery && matchesRorL;
     });
   }, [module, q, qFilter?.passages, qFilter?.parts, qFilter?.qtypes]);
 
   return (
-    <Box sx={{ py: { xs: 4, md: 6 } }}>
-      <Typography variant="h5" sx={{ fontWeight: 800, mb: 3, textAlign: "center" }}>
+    <Box sx={{ py: { xs: 3, sm: 4, md: 6 } }}>
+      <Typography
+        variant="h5"
+        sx={{
+          fontWeight: 800,
+          mb: 3,
+          textAlign: "center",
+          fontSize: { xs: "1.5rem", sm: "1.8rem", md: "2rem" },
+          background: theme =>
+            theme.palette.mode === "dark"
+              ? "linear-gradient(45deg, #ffffff, #a0a0ff)"
+              : "linear-gradient(45deg, #3333ff, #0066cc)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+        }}
+      >
         Testlar ro‘yxati
       </Typography>
-
       {filtered.length === 0 ? (
-        <Typography color="text.secondary" sx={{ textAlign: "center", py: 6 }}>
+        <Typography
+          color="text.secondary"
+          sx={{
+            textAlign: "center",
+            py: 6,
+            fontSize: { xs: "0.9rem", sm: "1rem" },
+          }}
+        >
           Hech narsa topilmadi. Qidiruvni yoki filtrlarni o‘zgartiring.
         </Typography>
       ) : (
-        <Stack direction="row" spacing={3} useFlexGap flexWrap="wrap" justifyContent="center">
-          {filtered.map((t) => (
-            <TestItemCard key={t.id} {...t} onStart={onStartTest} />
+        <Stack
+          direction="row"
+          spacing={{ xs: 2, sm: 3 }}
+          useFlexGap
+          flexWrap="wrap"
+          justifyContent="center"
+        >
+          {filtered.map((t, index) => (
+            <Box
+              key={t.id}
+              sx={{
+                animation: `fadeInUp 0.8s ease-out ${0.2 + index * 0.1}s`,
+                "@keyframes fadeInUp": {
+                  "0%": { opacity: 0, transform: "translateY(20px)" },
+                  "100%": { opacity: 1, transform: "translateY(0)" },
+                },
+              }}
+            >
+              <TestItemCard {...t} onStart={onStartTest} />
+            </Box>
           ))}
         </Stack>
       )}

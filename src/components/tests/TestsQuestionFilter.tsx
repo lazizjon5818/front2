@@ -1,4 +1,3 @@
-// src/components/tests/TestsQuestionFilter.tsx
 import {
     Box,
     Typography,
@@ -12,11 +11,8 @@ import {
   import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
   
   export type QFilterValue = {
-    // Reading uchun:
     passages?: string[];
-    // Listening uchun:
     parts?: string[];
-    // Ikkalasi uchun ham umumiy:
     qtypes?: string[];
   };
   
@@ -26,10 +22,8 @@ import {
     onChange: (v: QFilterValue) => void;
   };
   
-  // Ma'lumotlar (talab bo‘yicha)
   const READING_PASSAGES = ["Passage 1", "Passage 2", "Passage 3"];
   const LISTENING_PARTS = ["Part 1", "Part 2", "Part 3", "Part 4"];
-  
   const READING_QTYPES = [
     "Gap Filling",
     "Matching Features",
@@ -39,7 +33,6 @@ import {
     "Multiple Choice (One Answer)",
     "Other Types",
   ];
-  
   const LISTENING_QTYPES = [
     "Diagram Label",
     "Gap Filling",
@@ -58,72 +51,104 @@ import {
   const TestsQuestionFilter = ({ module, value, onChange }: Props) => {
     const isReading = module === "Reading";
     const isListening = module === "Listening";
+    const qtypes = isReading ? READING_QTYPES : isListening ? LISTENING_QTYPES : [];
   
     const onTogglePassage = (name: string) =>
       onChange({ ...value, passages: toggle(value.passages, name) });
-  
     const onTogglePart = (name: string) =>
       onChange({ ...value, parts: toggle(value.parts, name) });
-  
     const onToggleQtype = (name: string) =>
       onChange({ ...value, qtypes: toggle(value.qtypes, name) });
-  
-    // Modulga qarab tegishli ro'yxatlar
-    const qtypes = isReading ? READING_QTYPES : isListening ? LISTENING_QTYPES : [];
   
     return (
       <Box
         sx={(theme) => ({
-          minWidth: 260,
+          minWidth: { xs: 200, sm: 260 },
           border: `1px solid ${theme.palette.divider}`,
           borderRadius: 2,
-          p: 2,
+          p: { xs: 1.5, sm: 2 },
+          background: theme.palette.mode === "dark" ? "rgba(255,255,255,0.05)" : "#fff",
+          boxShadow: 1,
+          animation: "fadeIn 0.8s ease-out",
+          "@keyframes fadeIn": {
+            "0%": { opacity: 0, transform: "translateY(10px)" },
+            "100%": { opacity: 1, transform: "translateY(0)" },
+          },
         })}
       >
-        <Typography variant="subtitle1" sx={{ fontWeight: 800, mb: 1 }}>
+        <Typography
+          variant="subtitle1"
+          sx={{
+            fontWeight: 800,
+            mb: 1,
+            fontSize: { xs: "0.9rem", sm: "1rem" },
+            background: theme =>
+              theme.palette.mode === "dark"
+                ? "linear-gradient(45deg, #ffffff, #a0a0ff)"
+                : "linear-gradient(45deg, #3333ff, #0066cc)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+          }}
+        >
           Filters
         </Typography>
-  
-        {/* Passage / Part bo‘limi */}
         {(isReading || isListening) && (
-          <Accordion defaultExpanded disableGutters sx={{ boxShadow: "none" }}>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography sx={{ fontWeight: 700 }}>
+          <Accordion
+            defaultExpanded={false}
+            disableGutters
+            sx={{
+              boxShadow: "none",
+              background: "transparent",
+              "&:before": { display: "none" },
+            }}
+          >
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon sx={{ fontSize: { xs: 20, sm: 24 } }} />}
+              sx={{ px: 1, py: 0.5 }}
+            >
+              <Typography sx={{ fontWeight: 700, fontSize: { xs: "0.85rem", sm: "0.9rem" } }}>
                 {isReading ? "Passage" : "Part"}
               </Typography>
             </AccordionSummary>
-            <AccordionDetails>
+            <AccordionDetails sx={{ px: 1 }}>
               <FormGroup>
                 {(isReading ? READING_PASSAGES : LISTENING_PARTS).map((name) => (
                   <FormControlLabel
                     key={name}
                     control={
                       <Checkbox
-                        checked={
-                          isReading
-                            ? value.passages?.includes(name) ?? false
-                            : value.parts?.includes(name) ?? false
-                        }
-                        onChange={() =>
-                          isReading ? onTogglePassage(name) : onTogglePart(name)
-                        }
+                        checked={isReading ? value.passages?.includes(name) ?? false : value.parts?.includes(name) ?? false}
+                        onChange={() => (isReading ? onTogglePassage(name) : onTogglePart(name))}
+                        sx={{ py: 0.5 }}
                       />
                     }
-                    label={name}
+                    label={<Typography sx={{ fontSize: { xs: "0.8rem", sm: "0.85rem" } }}>{name}</Typography>}
                   />
                 ))}
               </FormGroup>
             </AccordionDetails>
           </Accordion>
         )}
-  
-        {/* Question type bo‘limi */}
         {(isReading || isListening) && (
-          <Accordion defaultExpanded disableGutters sx={{ boxShadow: "none", mt: 1 }}>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography sx={{ fontWeight: 700 }}>Question type</Typography>
+          <Accordion
+            defaultExpanded={false}
+            disableGutters
+            sx={{
+              boxShadow: "none",
+              background: "transparent",
+              "&:before": { display: "none" },
+              mt: 1,
+            }}
+          >
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon sx={{ fontSize: { xs: 20, sm: 24 } }} />}
+              sx={{ px: 1, py: 0.5 }}
+            >
+              <Typography sx={{ fontWeight: 700, fontSize: { xs: "0.85rem", sm: "0.9rem" } }}>
+                Question type
+              </Typography>
             </AccordionSummary>
-            <AccordionDetails>
+            <AccordionDetails sx={{ px: 1 }}>
               <FormGroup>
                 {qtypes.map((name) => (
                   <FormControlLabel
@@ -132,19 +157,22 @@ import {
                       <Checkbox
                         checked={value.qtypes?.includes(name) ?? false}
                         onChange={() => onToggleQtype(name)}
+                        sx={{ py: 0.5 }}
                       />
                     }
-                    label={name}
+                    label={<Typography sx={{ fontSize: { xs: "0.8rem", sm: "0.85rem" } }}>{name}</Typography>}
                   />
                 ))}
               </FormGroup>
             </AccordionDetails>
           </Accordion>
         )}
-  
-        {/* Agar Reading/Listening bo‘lmasa, bo‘sh */}
         {!isReading && !isListening && (
-          <Typography variant="body2" color="text.secondary">
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ fontSize: { xs: "0.8rem", sm: "0.9rem" } }}
+          >
             Bu filter faqat Reading yoki Listening moduli uchun mavjud.
           </Typography>
         )}
@@ -153,4 +181,3 @@ import {
   };
   
   export default TestsQuestionFilter;
-  

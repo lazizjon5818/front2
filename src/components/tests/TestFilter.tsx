@@ -22,27 +22,38 @@ const TestFilter = ({ onFilter }: Props) => {
   };
 
   return (
-    <Box sx={{ py: 2, mb: 2 }}>
+    <Box sx={{ py: { xs: 1, sm: 2 }, mb: 2 }}>
       <Stack
-        direction={{ xs: "column", md: "row" }}
-        spacing={2}
+        direction={{ xs: "column", sm: "row" }}
+        spacing={{ xs: 1, sm: 2 }}
         justifyContent="center"
       >
-        {/* Level Filter */}
-        <FormControl sx={{ minWidth: 160 }}>
-          <InputLabel>Daraja</InputLabel>
-          <Select value={level} label="Daraja" onChange={handleLevelChange}>
+        <FormControl sx={{ minWidth: { xs: 140, sm: 160 } }}>
+          <InputLabel sx={{ fontSize: { xs: "0.9rem", sm: "1rem" } }}>
+            Daraja
+          </InputLabel>
+          <Select
+            value={level}
+            label="Daraja"
+            onChange={handleLevelChange}
+            sx={{ fontSize: { xs: "0.9rem", sm: "1rem" }, height: { xs: 40, sm: 48 } }}
+          >
             <MenuItem value="">Barchasi</MenuItem>
             <MenuItem value="Beginner">Beginner</MenuItem>
             <MenuItem value="Intermediate">Intermediate</MenuItem>
             <MenuItem value="Advanced">Advanced</MenuItem>
           </Select>
         </FormControl>
-
-        {/* Duration Filter */}
-        <FormControl sx={{ minWidth: 160 }}>
-          <InputLabel>Davomiylik</InputLabel>
-          <Select value={duration} label="Davomiylik" onChange={handleDurationChange}>
+        <FormControl sx={{ minWidth: { xs: 140, sm: 160 } }}>
+          <InputLabel sx={{ fontSize: { xs: "0.9rem", sm: "1rem" } }}>
+            Davomiylik
+          </InputLabel>
+          <Select
+            value={duration}
+            label="Davomiylik"
+            onChange={handleDurationChange}
+            sx={{ fontSize: { xs: "0.9rem", sm: "1rem" }, height: { xs: 40, sm: 48 } }}
+          >
             <MenuItem value="">Barchasi</MenuItem>
             <MenuItem value="10">10 min</MenuItem>
             <MenuItem value="20">20 min</MenuItem>
