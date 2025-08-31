@@ -10,7 +10,7 @@ import SignUp from "../pages/SignUp";
 
 export const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/*",
     
     element: <MainLayout />,
     children: [
